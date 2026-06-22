@@ -1,6 +1,5 @@
-# Robust Classification Decision Boundary Prediction via PDE-Governed Geometric Interface Evolution
 
-This repository provides the software and reproducibility assets for the paper **"Robust Classification Decision Boundary Prediction via PDE-Governed Geometric Interface Evolution"**. The implementation is organized around two stages:
+This repository provides the software and reproducibility assets. The implementation is organized around two stages:
 
 1. **Decision boundary inference**.
 2. **Classification decision**.
