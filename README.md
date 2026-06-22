@@ -1,8 +1,8 @@
 
 This repository provides the software and reproducibility assets. The implementation is organized around two stages:
 
-1. **Decision boundary inference**.
-2. **Classification decision**.
+1. **Classification Decision boundary inference**.
+2. **Classification**.
 
 The released software is distributed as Windows executables (`.exe`) together with all data, intermediate features, geometric prior dictionaries, and trained weights needed to reproduce the reported experiments.
 
@@ -170,7 +170,7 @@ You may also run the COVID-19 classifier interactively:
 
 ## Output
 
-The classification decision executables export evaluation results, including confusion-matrix results, to the specified `--output-dir`. If `--device auto` is used, CUDA is selected automatically when available; otherwise, the program falls back to CPU execution.
+The classification decision executables export evaluation results, including confusion-matrix results, to the specified `--output-dir`.
 
 ## Notes
 
