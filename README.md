@@ -10,18 +10,18 @@ The released software is distributed as Windows executables (`.exe`) together wi
 
 ```text
 .
-|-- boundary_inference/
+|-- classification_decision_boundary_inference/
 |   |-- data_spatiotemporal_modeling.exe
 |   |-- symbolic_distance_function.exe
 |   |-- train.exe
 |   |-- data/
 |   |-- checkpoints/
 |   `-- _internal/
-|-- classification_decision_COVID/
+|-- classification_on_COVID-19/
 |   |-- classifier_levset.exe
 |   |-- potential_data/
 |   `-- outputs/
-|-- classification_decision_RSRAC/
+|-- classification_on_RSRAC/
 |   |-- classifier_levset.exe
 |   |-- potential_data/
 |   `-- outputs/
@@ -40,7 +40,7 @@ The released software is distributed as Windows executables (`.exe`) together wi
     `-- test_data/
 ```
 
-`boundary_inference` implements the decision boundary inference stage. `classification_decision_COVID` and `classification_decision_RSRAC` implement the classification decision stage for the COVID-19 and RSRAC experiments, respectively.
+`classification_decision_boundary_inference` implements the decision boundary inference stage. `classification_on_COVID-19` and `classification_on_RSRAC` implement the classification decision stage for the COVID-19 and RSRAC experiments, respectively.
 
 The `_internal` directory contains runtime dependencies required by the packaged executables. Keep it in place when moving or copying the executable files.
 
@@ -48,7 +48,7 @@ The `_internal` directory contains runtime dependencies required by the packaged
 
 ### 1. Boundary Inference
 
-The `boundary_inference` module contains three executable programs.
+The `classification_decision_boundary_inference` module contains three executable programs.
 
 | Program | Role | Input | Output |
 | --- | --- | --- | --- |
@@ -60,17 +60,17 @@ Typical workflow:
 
 ```powershell
 # 1. Generate spatiotemporal association data from latent classification features.
-.\boundary_inference\data_spatiotemporal_modeling.exe "<absolute-path-to-class-feature-file>"
+.\classification_decision_boundary_inference\data_spatiotemporal_modeling.exe "<absolute-path-to-class-feature-file>"
 
 # 2. Build the geometric prior dictionary.
-.\boundary_inference\symbolic_distance_function.exe "<absolute-path-to-es_data_with_time>" `
+.\classification_decision_boundary_inference\symbolic_distance_function.exe "<absolute-path-to-es_data_with_time>" `
   --class-num <class-index> `
   --class-name <class-name> `
   --data-dim <feature-dimension> `
   --class-base-dir "<absolute-path-to-class-base-directory>"
 
 # 3. Train the PDE-governed level-set boundary model.
-.\boundary_inference\train.exe "<absolute-path-to-signed_distance_dict>" `
+.\classification_decision_boundary_inference\train.exe "<absolute-path-to-signed_distance_dict>" `
   --epochs 100 `
   --batch-size 64 `
   --data-dim <feature-dimension>
@@ -79,9 +79,9 @@ Typical workflow:
 Available command-line options:
 
 ```powershell
-.\boundary_inference\data_spatiotemporal_modeling.exe --help
-.\boundary_inference\symbolic_distance_function.exe --help
-.\boundary_inference\train.exe --help
+.\classification_decision_boundary_inference\data_spatiotemporal_modeling.exe --help
+.\classification_decision_boundary_inference\symbolic_distance_function.exe --help
+.\classification_decision_boundary_inference\train.exe --help
 ```
 
 ### 2. Classification Decision
@@ -117,21 +117,21 @@ $signedDistance = (0..7 | ForEach-Object {
   Join-Path $base "class_$_\data\signed_distance_dict"
 }) -join ","
 
-.\classification_decision_RSRAC\classifier_levset.exe `
+.\classification_on_RSRAC\classifier_levset.exe `
   --test-data (Join-Path $repo "RSRAC Datasets\test_data\potential_testdata") `
   --test-label (Join-Path $repo "RSRAC Datasets\test_data\potential_testlabel") `
   --checkpoints $checkpoints `
   --signed-distance $signedDistance `
   --time-multipliers "0,0,0,0,0,0,0,0" `
   --batch-size 64 `
-  --output-dir (Join-Path $repo "classification_decision_RSRAC\outputs") `
+  --output-dir (Join-Path $repo "classification_on_RSRAC\outputs") `
   --device auto
 ```
 
 You may also run the RSRAC classifier interactively:
 
 ```powershell
-.\classification_decision_RSRAC\classifier_levset.exe --interactive
+.\classification_on_RSRAC\classifier_levset.exe --interactive
 ```
 
 ### COVID-19 Example
@@ -151,21 +151,21 @@ $signedDistance = (0..2 | ForEach-Object {
   Join-Path $base "class_$_\data\signed_distance_dict"
 }) -join ","
 
-.\classification_decision_COVID\classifier_levset.exe `
+.\classification_on_COVID-19\classifier_levset.exe `
   --test-data (Join-Path $base "test_data\potential_test_data") `
   --test-label (Join-Path $base "test_data\potential_test_label") `
   --checkpoints $checkpoints `
   --signed-distance $signedDistance `
   --time-multipliers "0,0,0" `
   --batch-size 64 `
-  --output-dir (Join-Path $repo "classification_decision_COVID\outputs") `
+  --output-dir (Join-Path $repo "classification_on_COVID-19\outputs") `
   --device auto
 ```
 
 You may also run the COVID-19 classifier interactively:
 
 ```powershell
-.\classification_decision_COVID\classifier_levset.exe --interactive
+.\classification_on_COVID-19\classifier_levset.exe --interactive
 ```
 
 ## Output
@@ -178,4 +178,3 @@ The classification decision executables export evaluation results, including con
 - The provided data files are serialized experiment artifacts and should be used through the released executables.
 - To reproduce the paper results, provide the absolute paths to the corresponding dataset, checkpoint, and signed-distance dictionary files.
 - Keep each class's checkpoint and `signed_distance_dict` paired with the same dataset setting or feature backbone.
-
